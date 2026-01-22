@@ -1,0 +1,111 @@
+{% extends 'commands/base.html' %}
+
+{% block content %}
+<div style="max-width: 1100px; margin: 0 auto;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem;"
+        class="flex-wrap gap-4">
+        <div>
+            <h1 class="text-gradient" style="margin: 0; font-size: 2.5rem;">
+                {{ command.title }}
+            </h1>
+            <div class="contributor-badge">
+                <div class="user-avatar">
+                    {{ command.author.username|slice:":1" }}
+                </div>
+                <div>
+                    <span class="text-muted text-small">Contributed by</span>
+                    <span style="color: var(--text-color); font-weight: 600;">{{ command.author.username }}</span>
+                    <span class="text-muted text-small" style="margin-left: 0.5rem;">on
+                        {{ command.created_at|date:"M d, Y" }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        {% if user.is_authenticated %}
+        {% if user == command.author %}
+        <a href="{% url 'edit_command' pk=command.pk %}" class="btn btn-primary w-full-mobile w-auto-sm">Edit
+            Command</a>
+        {% else %}
+        <a href="{% url 'suggest_edit' pk=command.pk %}" class="btn btn-primary w-full-mobile w-auto-sm">Suggest
+            Edit</a>
+        {% endif %}
+        {% endif %}
+    </div>
+
+    <div class="detail-grid">
+        <!-- Main Content -->
+        <div style="display: flex; flex-direction: column; gap: 2rem;">
+            <div class="glass" style="padding: 2rem;">
+                <h2 class="text-muted mb-2"
+                    style="margin-top: 0; font-size: 1.25rem; text-transform: uppercase; letter-spacing: 1px;">
+                    Command</h2>
+                <div class="code-block" style="position: relative;">
+                    <code id="command-code">{{ command.command_string }}</code>
+                    <button onclick="navigator.clipboard.writeText(document.getElementById('command-code').innerText)"
+                        class="btn btn-copy" style="position: absolute; top: 0.5rem; right: 0.5rem;">
+                        Copy
+                    </button>
+                </div>
+            </div>
+
+            <div class="glass" style="padding: 2rem;">
+                <h2 class="text-muted mb-2"
+                    style="margin-top: 0; font-size: 1.25rem; text-transform: uppercase; letter-spacing: 1px;">
+                    Explanation</h2>
+                <div style="line-height: 1.6; color: #e2e8f0; white-space: pre-wrap;">{{ command.explanation }}</div>
+            </div>
+
+            {% if pending_edits and user == command.author %}
+            <div style="margin-top: 3rem;">
+                <h3>Pending Edit Suggestions</h3>
+                {% for edit in pending_edits %}
+                <div class="glass mb-2" style="padding: 1rem; border-left: 4px solid #fde047;">
+                    <p class="mb-2">
+                        <strong>{{ edit.user.username }}</strong> suggests a change:
+                    </p>
+                    <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1rem;">
+                        <div style="min-width: 0;">
+                            <h4 style="margin:0;" class="text-danger">Current</h4>
+                            <pre
+                                style="background: rgba(0,0,0,0.3); padding: 0.5rem; border-radius: 4px; overflow-x: auto;">{{ command.command_string }}</pre>
+                        </div>
+                        <div style="min-width: 0;">
+                            <h4 style="margin:0;" class="text-success">Suggested</h4>
+                            <pre
+                                style="background: rgba(0,0,0,0.3); padding: 0.5rem; border-radius: 4px; overflow-x: auto;">{{ edit.suggested_command_string }}</pre>
+                        </div>
+                    </div>
+                    <a href="{% url 'review_edit' pk=edit.pk %}" class="btn btn-primary">Review</a>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Sidebar -->
+        <aside>
+            <div class="glass" style="padding: 1.5rem;">
+                <h3 class="mb-2 border-bottom-cyan" style="padding-bottom: 0.5rem; font-size: 1.1rem;">Contributors</h3>
+                {% if contributors %}
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    {% for person in contributors %}
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div class="user-avatar"
+                            style="width: 1.75rem; height: 1.75rem; font-size: 0.75rem; background: rgba(56, 189, 248, 0.2);">
+                            {{ person.username|slice:":1" }}
+                        </div>
+                        <div style="font-weight: 500;">
+                            {{ person.username }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted text-small">No additional contributors yet.</p>
+                {% endif %}
+            </div>
+        </aside>
+    </div>
+
+</div>
+{% endblock %}

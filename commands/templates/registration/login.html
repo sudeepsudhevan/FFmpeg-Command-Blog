@@ -1,0 +1,36 @@
+{% extends 'commands/base.html' %}
+
+{% block content %}
+<div style="max-width: 400px; margin: 0 auto;">
+    <h1 class="text-center text-gradient mb-4">Login</h1>
+    <div class="glass" style="padding: 2rem;">
+        <form method="post">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+            <div class="alert alert-warning">
+                {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+            </div>
+            {% endif %}
+
+            {% for field in form %}
+            <div class="mb-2">
+                <label class="text-muted text-small mb-1" style="display: block; font-weight: 600;">
+                    {{ field.label }}
+                </label>
+                {{ field }}
+                {% if field.errors %}
+                <div class="text-danger text-xs">
+                    {% for error in field.errors %}{{ error }}{% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary"
+                style="width: 100%; padding: 1rem; margin-top: 1rem;">Login</button>
+        </form>
+    </div>
+    <p class="text-center mt-4 text-muted">
+        Don't have an account? <a href="{% url 'register' %}">Sign Up</a>
+    </p>
+</div>
+{% endblock %}

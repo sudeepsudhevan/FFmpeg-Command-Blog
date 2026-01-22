@@ -1,0 +1,57 @@
+{% extends 'commands/base.html' %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto;">
+    <h1 class="text-center mb-4">Review Suggestion</h1>
+
+    <div class="glass mb-4" style="padding: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h3>Comparison</h3>
+            <span class="text-muted">Suggested by {{ edit_request.user.username }}</span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <!-- Original -->
+            <div>
+                <h4 class="text-danger border-bottom-danger mb-2"
+                    style="border-bottom: 1px solid #ef4444; padding-bottom: 0.5rem;">Current Version</h4>
+                <div style="margin-bottom: 1.5rem;">
+                    <label class="text-small text-muted mb-1" style="display: block;">Command</label>
+                    <div class="code-block">{{ edit_request.original_command.command_string }}</div>
+                </div>
+                <div>
+                    <label class="text-small text-muted mb-1" style="display: block;">Explanation</label>
+                    <div class="text-small" style="line-height: 1.6;">{{ edit_request.original_command.explanation }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Suggested -->
+            <div>
+                <h4 class="text-success border-bottom-success mb-2"
+                    style="border-bottom: 1px solid #22c55e; padding-bottom: 0.5rem;">Suggested Version</h4>
+                <div style="margin-bottom: 1.5rem;">
+                    <label class="text-small text-muted mb-1" style="display: block;">Command</label>
+                    <div class="code-block"
+                        style="background: rgba(34, 197, 94, 0.1); border-color: rgba(34, 197, 94, 0.3);">
+                        {{ edit_request.suggested_command_string }}</div>
+                </div>
+                <div>
+                    <label class="text-small text-muted mb-1" style="display: block;">Explanation</label>
+                    <div class="text-small"
+                        style="line-height: 1.6; background: rgba(34, 197, 94, 0.1); padding: 0.5rem; border-radius: 4px;">
+                        {{ edit_request.suggested_explanation }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form method="post" style="display: flex; gap: 1rem; justify-content: center;">
+        {% csrf_token %}
+        <button type="submit" name="action" value="reject" class="btn" style="background: #ef4444; color: white;">Reject
+            Suggestion</button>
+        <button type="submit" name="action" value="approve" class="btn"
+            style="background: #22c55e; color: white;">Approve & Merge</button>
+    </form>
+</div>
+{% endblock %}

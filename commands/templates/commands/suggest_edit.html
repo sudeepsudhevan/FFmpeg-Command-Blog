@@ -1,0 +1,25 @@
+{% extends 'commands/base.html' %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto;">
+    <h1 class="text-center mb-1">Suggesting Edit</h1>
+    <p class="text-center text-muted mb-4">for "{{ command.title }}"</p>
+
+    <div class="glass" style="padding: 2rem;">
+        <form method="post">
+            {% csrf_token %}
+
+            {% for field in form %}
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; color: #94a3b8; font-weight: 600;">
+                    {{ field.label }}
+                </label>
+                {{ field }}
+            </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem;">Submit Suggestion</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

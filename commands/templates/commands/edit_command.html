@@ -1,0 +1,46 @@
+{% extends 'commands/base.html' %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <h1 class="text-gradient mb-4">Edit Command</h1>
+
+    <div class="glass" style="padding: 2rem;">
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-4">
+                <label for="{{ form.title.id_for_label }}"
+                    style="display: block; margin-bottom: 0.5rem; color: #fff; font-weight: 600;">Title</label>
+                {{ form.title }}
+                {% if form.title.errors %}
+                <div class="text-danger text-small">{{ form.title.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-4">
+                <label for="{{ form.command_string.id_for_label }}"
+                    style="display: block; margin-bottom: 0.5rem; color: #fff; font-weight: 600;">Command</label>
+                {{ form.command_string }}
+                {% if form.command_string.errors %}
+                <div class="text-danger text-small">{{ form.command_string.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-4">
+                <label for="{{ form.explanation.id_for_label }}"
+                    style="display: block; margin-bottom: 0.5rem; color: #fff; font-weight: 600;">Explanation</label>
+                {{ form.explanation }}
+                {% if form.explanation.errors %}
+                <div class="text-danger text-small">{{ form.explanation.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="{% url 'command_detail' pk=command.pk %}" class="btn"
+                    style="background: rgba(255,255,255,0.1); color: #fff;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
